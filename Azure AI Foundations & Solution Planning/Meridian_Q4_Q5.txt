@@ -1,0 +1,10 @@
+Question 4
+
+Noun: scanned image or document (the 4,200 physical and scanned intake forms received daily across the 14 clinics); Verb: extract structured fields (patient name, date of birth, insurance ID and presenting complaint). This maps to Azure AI Document Intelligence, and because the form layout is consistent across all 14 clinics, a custom template model trained on a small set of sample forms can extract the four fields reliably, with a confidence score for each field. It does not warrant Azure OpenAI Service because there is no generate, reason or synthesize verb: the task is fixed-field extraction, where a generative model would add token cost at 4,200 forms a day and the risk of invented or altered values in dates of birth and insurance IDs, and Integration Point A requires raw scanned PHI to be structured by Document Intelligence before it enters any language model's context window. Recommendation: deploy Document Intelligence in an EU region for GDPR, write the extracted fields directly into the patient record in Dataverse, and send only low-confidence fields to staff for review.
+
+
+Question 5
+
+Answer: A
+
+The appointment date, time, clinic address, preparation instructions and preferred language are read from the patient's record in Dataverse, and Azure AI Language or Azure OpenAI Service produces the reminder script in French, German or Dutch (Text + Generate). That text is then passed to Azure AI Speech Text-to-Speech, which converts it to audio with a neural voice in the patient's language (Text + Convert to audio) for the outbound call, with both services deployed in an EU region because the script contains patient data.
